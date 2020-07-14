@@ -1,0 +1,13 @@
+@import url('https://fonts.googleapis.com/css?family=Tangerine');
+
+body{
+    background-color: black;
+    font-family: 'Roboto', sans-serif;
+}
+
+p{
+    background-color: #fff;
+    display: inline-flex;
+    align-items: center;
+   
+}
