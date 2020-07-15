@@ -90,6 +90,13 @@
                     code();
                     var wait = 5000;
                     var start = new Date().getTime() + wait;
+
+                    if (localStorage.getItem("time") != 0)
+                    {
+                        start = localStorage.getItem("time");
+                    } else if (localStorage.getItem("time") == null ){
+                        start = new Date().getTime() + wait+35000; 
+                    }
                     var x = setInterval(function() { 
                         var now = new Date().getTime(); 
                         var t = start - now;
@@ -101,6 +108,7 @@
                                 // document.getElementById("code").innerHTML = code();
                                 document.getElementById("time").innerHTML = "5s";
                             } 
+                         localStorage.setItem("time", start);
                         }, 1000); 
                     function code() {
                         $.ajax({
