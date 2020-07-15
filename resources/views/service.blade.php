@@ -87,29 +87,15 @@
                     <a id = "time"></a>
                 </div>
                 <script> 
-                    var deadline;
-                    var wait = 30000;
-                    if (localStorage.getItem("time") != 0)
-                    {
-                        document.getElementById("code").innerHTML = localStorage.getItem("code");
-                        deadline = localStorage.getItem("count");
-                    } else if (localStorage.getItem("count") == null ){
-                        code();
-                        deadline = new Date().getTime()+ wait; 
-                    }
-                    // var start = new Date().getTime() + wait;
+                    var wait  = 30; // Timer
+                    code();
                     var x = setInterval(function() { 
-                        var now = new Date().getTime(); 
-                        var t = deadline - now;
-                        var seconds = Math.floor((t % (1000 * 60)) / 1000); 
-                        document.getElementById("time").innerHTML = seconds + 2 + "s "; 
-                            if (t < 1) { 
-                                deadline = new Date().getTime() + wait - 1000;
+                        var now = new Date().getSeconds(); 
+                        seconds = Math.floor(wait - (now % wait));
+                        document.getElementById("time").innerHTML = seconds + "s"; 
+                            if (seconds >= 30) { 
                                 code();
-                                // document.getElementById("time").innerHTML = wait + "s";
                             } 
-                            localStorage.setItem("code", document.getElementById("code").innerHTML);
-                            localStorage.setItem("count", deadline);
                         }, 1000); 
                     function code() {
                         $.ajax({
