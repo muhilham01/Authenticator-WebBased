@@ -98,7 +98,6 @@
                             if (t < 0) { 
                                 start = new Date().getTime() + wait - 1000;
                                 code();
-                                // document.getElementById("code").innerHTML = code();
                                 document.getElementById("time").innerHTML = "5s";
                             } 
                         }, 1000); 
