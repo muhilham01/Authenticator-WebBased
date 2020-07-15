@@ -87,28 +87,15 @@
                     <a id = "time"></a>
                 </div>
                 <script> 
+                    var wait  = 30; // Timer
                     code();
-                    var wait = 5000;
-                    var start = new Date().getTime() + wait;
-
-                    if (localStorage.getItem("time") != 0)
-                    {
-                        start = localStorage.getItem("time");
-                    } else if (localStorage.getItem("time") == null ){
-                        start = new Date().getTime() + wait+35000; 
-                    }
                     var x = setInterval(function() { 
-                        var now = new Date().getTime(); 
-                        var t = start - now;
-                        var seconds = Math.floor((t % (1000 * 60)) / 1000); 
-                        document.getElementById("time").innerHTML = seconds + 1 + "s "; 
-                            if (t < 0) { 
-                                start = new Date().getTime() + wait - 1000;
+                        var now = new Date().getSeconds(); 
+                        seconds = Math.floor(wait - (now % wait));
+                        document.getElementById("time").innerHTML = seconds + "s"; 
+                            if (seconds >= 30) { 
                                 code();
-                                // document.getElementById("code").innerHTML = code();
-                                document.getElementById("time").innerHTML = "5s";
                             } 
-                         localStorage.setItem("time", start);
                         }, 1000); 
                     function code() {
                         $.ajax({

@@ -21,6 +21,10 @@ Route::get('/service', function () {
     return view('service');
 });
 
+Route::get('/test', function () {
+    return view('test');
+});
+
 Route::get('/user', 'UserController@index');
 
 Route::get('/user/code', 'UserController@code');

@@ -2,7 +2,7 @@
 //session_start();
 
 $ga = new PHPGangsta_GoogleAuthenticator();
-$secret = md5("MUSTOFA");
+$secret = "O45KWYL4RXKFEANB";
 echo nl2br("Secret is: ".$secret."\r\n");
 
 $qrCodeUrl = $ga->getQRCodeGoogleUrl('Blog', $secret);
@@ -34,28 +34,19 @@ p {
 <p id="count"></p> 
 <script> 
 
-var deadline;
- if (localStorage.getItem("time") != 0)
- {
-     deadline = localStorage.getItem("time");
- } else if (localStorage.getItem("time") == null ){
-     deadline = new Date().getTime()+35000; 
- }
-
+var deadline = new Date().getTime();
+var wait  = 30; // Timer
 var x = setInterval(function() { 
-    var now = new Date().getTime(); 
-    var t = deadline - now;
-    seconds = Math.floor(((t % (1000 * 60)) / 1000) +1); 
+    var now = new Date().getSeconds(); 
+    // var t = deadline - now;
+    // seconds = Math.floor(((now % (1000 * 60)) / 1000) % wait); 
+    seconds = Math.floor(wait - (now % wait));
     document.getElementById("count").innerHTML = seconds + "s "; 
-    if (t < 1) { 
-        deadline = new Date().getTime()+34000;  
+    if (seconds <= 1) { 
+        alert("Ok");
     } 
-    localStorage.setItem("time", deadline);
-    }, 1000); 
+    }, 1000);
 </script> 
   
 </body> 
 </html> 
-
-
-
