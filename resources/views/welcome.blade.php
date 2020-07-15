@@ -43,15 +43,15 @@ var deadline;
  }
 
 var x = setInterval(function() { 
-var now = new Date().getTime(); 
-var t = deadline - now;
-seconds = Math.floor(((t % (1000 * 60)) / 1000) +1); 
-document.getElementById("count").innerHTML = seconds + "s "; 
-if (t < 1) { 
-    deadline = new Date().getTime()+34000;  
-} 
- localStorage.setItem("time", deadline);
-}, 1000); 
+    var now = new Date().getTime(); 
+    var t = deadline - now;
+    seconds = Math.floor(((t % (1000 * 60)) / 1000) +1); 
+    document.getElementById("count").innerHTML = seconds + "s "; 
+    if (t < 1) { 
+        deadline = new Date().getTime()+34000;  
+    } 
+    localStorage.setItem("time", deadline);
+    }, 1000); 
 </script> 
   
 </body> 

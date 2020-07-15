@@ -87,19 +87,29 @@
                     <a id = "time"></a>
                 </div>
                 <script> 
-                    code();
-                    var wait = 5000;
-                    var start = new Date().getTime() + wait;
+                    var deadline;
+                    var wait = 30000;
+                    if (localStorage.getItem("time") != 0)
+                    {
+                        document.getElementById("code").innerHTML = localStorage.getItem("code");
+                        deadline = localStorage.getItem("count");
+                    } else if (localStorage.getItem("count") == null ){
+                        code();
+                        deadline = new Date().getTime()+ wait; 
+                    }
+                    // var start = new Date().getTime() + wait;
                     var x = setInterval(function() { 
                         var now = new Date().getTime(); 
-                        var t = start - now;
+                        var t = deadline - now;
                         var seconds = Math.floor((t % (1000 * 60)) / 1000); 
-                        document.getElementById("time").innerHTML = seconds + 1 + "s "; 
-                            if (t < 0) { 
-                                start = new Date().getTime() + wait - 1000;
+                        document.getElementById("time").innerHTML = seconds + 2 + "s "; 
+                            if (t < 1) { 
+                                deadline = new Date().getTime() + wait - 1000;
                                 code();
-                                document.getElementById("time").innerHTML = "5s";
+                                // document.getElementById("time").innerHTML = wait + "s";
                             } 
+                            localStorage.setItem("code", document.getElementById("code").innerHTML);
+                            localStorage.setItem("count", deadline);
                         }, 1000); 
                     function code() {
                         $.ajax({

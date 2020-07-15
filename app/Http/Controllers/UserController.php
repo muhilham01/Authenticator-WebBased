@@ -20,7 +20,8 @@ class UserController extends Controller
 
     public function code() {
         $ga = new PHPGangsta_GoogleAuthenticator();
-        $secret = $ga->createSecret();
+        // $secret = $ga->createSecret();
+        $secret = md5("instagramMustofa");
 
         $qrCodeUrl = $ga->getQRCodeGoogleUrl('Blog', $secret);
 
