@@ -21,6 +21,8 @@ Route::get('/service', function () {
     return view('service');
 });
 
+Route::post('/service/post_secret', 'ServiceController@post_secret');
+
 Route::get('/test', function () {
     return view('test');
 });
