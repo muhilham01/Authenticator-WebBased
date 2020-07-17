@@ -130,12 +130,20 @@
                 $('has-tooltip').tooltip();
                 });
         </script>
+        <script>
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+        </script>
         <script> 
-            $service = localStorage.getItem("service");
-            Session::put('service',$service);
-            $service.forEach(code(code));
+            // $service = localStorage.getItem("service");
+            // Session::put('service',$service);
+            // $service.forEach(code(code));
             var wait  = 30; // Timer
-            // code();
+            $service = ['QWERTASDFZXCV', 'RTYUFGHJVBNM'];
+            code();
             var x = setInterval(function() { 
                 var now = new Date().getSeconds(); 
                 seconds = Math.floor(wait - (now % wait));
@@ -146,14 +154,26 @@
                 }, 1000);
             function code() {
                 $.ajax({
-                    url: '/user/code', //php          
-                    dataType: 'json', //data format   
+                    url: '/service/code', //php          
+                    dataType: 'json', //data format 
+                    data: {'key': $service},
+                    type: 'post',
                     success: function (result) {
+                        // var u = result.length;
+                        for (var i = 0; i < result.length; i++) {
+                            $('#' + i).html(result[i]);
+                        }
+                        // result.each(function(item, index) {
+                        //     $('#' + index).html(item);
+                        // });
                         $('#code').html(result); //output to html
+                        alert("ada");
                     },
                     fail: function(){
                         $('#code').html("failed"); //output to html
-                    }
+                        alert("tidak ada");
+                    },
+                    complete: function (result){alert("??");} 
                 });
             }
         </script>
@@ -210,12 +230,13 @@
                     <div class="row">
                     <!-- <div class="card-deck text-center mx-auto"> -->
                     <?php 
+                        $i = 0;
                         foreach($service as $s):
                     ?>
                         <div class="card mb-4 p-3 bg-light mx-auto">
                             <div class="card-body">
                                 <div class = 'data'>
-                                    <a id = "code"> </a>
+                                    <a id = <?php echo $i; $i++;?>> </a>
                                 </div>
                             </div>
                             <div class="card-footer bg-light">

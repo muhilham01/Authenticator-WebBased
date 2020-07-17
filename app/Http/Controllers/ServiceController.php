@@ -8,19 +8,17 @@
 
     class ServiceController extends Controller
     {
-        public function code($key) {
+        public function code() {
+            // echo json_encode($_REQUEST['key']);
             $ga = new PHPGangsta_GoogleAuthenticator();
-            // $secret = $ga->createSecret();
-            $secret = $key;
-
-            $qrCodeUrl = $ga->getQRCodeGoogleUrl('Blog', $secret);
-            // echo $qrCodeUrl;
-
-            $oneCode = $ga->getCode($secret);
-
-            $checkResult = $ga->verifyCode($secret, $oneCode, 2);    // 2 = 2*30sec clock tolerance
-            echo $oneCode;
+            $code = array();
+            foreach($_REQUEST['key'] as $key) {
+                $oneCode = $ga->getCode($key);
+                array_push($code, $oneCode);
+            }
+            echo json_encode($code);
         }
+
         public function get_secret() {
             Session::flush();
             $secret = localStorage.getItem("secret");

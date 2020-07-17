@@ -30,3 +30,5 @@ Route::get('/test', function () {
 Route::get('/user', 'UserController@index');
 
 Route::get('/user/code', 'UserController@code');
+
+Route::post('/service/code', 'ServiceController@code');
