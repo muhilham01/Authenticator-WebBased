@@ -2,7 +2,7 @@
 //session_start();
 
 $ga = new PHPGangsta_GoogleAuthenticator();
-$secret = md5("MUSTOFA");
+$secret = "QWERASDFZXCV";
 echo nl2br("Secret is: ".$secret."\r\n");
 
 $qrCodeUrl = $ga->getQRCodeGoogleUrl('Blog', $secret);

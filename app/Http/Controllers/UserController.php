@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use PHPGangsta_GoogleAuthenticator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class UserController extends Controller
 {
@@ -30,5 +31,17 @@ class UserController extends Controller
 
         $checkResult = $ga->verifyCode($secret, $oneCode, 2);    // 2 = 2*30sec clock tolerance
         echo $oneCode;
+    }
+
+    public function home()
+    {
+    	// mengambil data dari table user
+    	Session::flush();
+        $service = DB::table('service')->where('user_id',$id = 1)->get();
+
+        // mengirim data user ke view index
+        Session::put('service', $service);
+    	return view('dashboard');
+
     }
 }

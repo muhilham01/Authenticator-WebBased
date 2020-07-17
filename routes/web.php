@@ -23,9 +23,13 @@ Route::get('/service', function () {
 
 Route::post('/service/post_secret', 'ServiceController@post_secret');
 
+Route::post('/service/get_secret', 'ServiceController@get_secret');
+
 Route::get('/test', function () {
     return view('test');
 });
+
+Route::get('/home', 'UserController@home');
 
 Route::get('/user', 'UserController@index');
 

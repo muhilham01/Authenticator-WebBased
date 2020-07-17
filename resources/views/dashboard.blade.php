@@ -1,4 +1,8 @@
 <!DOCTYPE html>
+<?php 
+    $service = Session::get('service') ?? '';
+    echo $service;
+?>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="utf-8">
@@ -138,9 +142,9 @@
             });
         </script>
         <script> 
-            var service = [];
-            service = JSON.parse(localStorage.getItem("service"));
-            service = service != null ? service : [];
+            // var service = [];
+            // service = JSON.parse(localStorage.getItem("service"));
+            // service = service != null ? service : [];
             var wait  = 30; // Timer
             // if(service == null) {
                 // service = ['QWERTASDFZXCV', 'RTYUFGHJVBNM'];
@@ -155,10 +159,14 @@
             // service.forEach(function(item, index) {
             //     $('#n' + index).html(item);
             // });
+            var service = <?php echo $service ?? ''?>;
+            // alert(service);
+            // secret();
             code();
             var x = setInterval(function() { 
                 var now = new Date().getSeconds(); 
                 seconds = Math.floor(wait - (now % wait));
+                // document.getElementById("code").innerHTML = JSON.stringify(service);
                 document.getElementById("time").innerHTML = seconds + "s"; 
                     if (seconds >= 30) { 
                         code();
@@ -166,22 +174,28 @@
                 }, 1000);
             function code() {
                 $.ajax({
+                    // headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}
                     url: '/service/code', //php          
                     dataType: 'json', //data format 
-                    data: {'key': service},
+                    data: {'key': service, "_token": "{{ csrf_token() }}"},
                     type: 'post',
                     success: function (result) {
+                        // alert(JSON.stringify(result));
                         var u = result.length;
-                        for (var i = 0; i < result.length; i++) {
-                            $('#' + i).html(result[i]);
-                        }
-                        // result.forEach(function(item, index) {
-                        //     $('#' + index).html(item);
-                        // });
-                        $('#code').html(result); //output to html
-                        service.forEach(function(item, index) {
-                            $('#n' + index).html(item[0]);
+                        // for (var i = 0; i < result.length; i++) {
+                        //     $('#' + i ).html(JSON.stringify(result[i]));
+                        // }
+                        // for (let key in result) {
+                        //     console.log(key, result[key]);
+                        // }
+                        result.forEach(function(item, index) {
+                            $('#' + item['id']).html(item['code']);
                         });
+                        $('#code').html(JSON.stringify(result)); //output to html
+                        // $('#2').html(JSON.stringify(result[0]['id']));
+                        // result.forEach(function(item, index) {
+                        //     $('#' + index).html(JSON.stringify(item));
+                        // });
                         // alert("ada");
                     },
                     fail: function(){
@@ -193,13 +207,6 @@
             }
         </script>
     </head>
-    <?php 
-    $service = array(
-        array('QWERASDFZXCV', 'Test1'),
-        array('QWERASDFZXCV', 'Test2'),
-        array('QWERASDFZXCV', 'Test3'),
-    );
-    ?>
     <body>
         <div class="flex-center position-ref full-height wrapper">
             <div class="content">
@@ -244,105 +251,26 @@
                 <div class="container">
                     <div class="row">
                     <!-- <div class="card-deck text-center mx-auto"> -->
-                    <?php 
-                        $i = 0;
+                        <?php 
                         foreach($service as $s):
-                    ?>
+                        ?>
                         <div class="card mb-4 p-3 bg-light mx-auto">
                             <div class="card-body">
                                 <div class = 'data'>
-                                    <a id = <?php echo "{$i}";?>> </a>
+                                    <a id = <?php echo $s->id;?>> </a>
                                 </div>
                             </div>
                             <div class="card-footer bg-light">
-                                <a id = <?php echo "n{$i}"; $i++;?>> </a>
+                                <a id = <?php echo $s->service;?>> <?php echo $s->service;?> </a>
                             </div>
                         </div>
-                    <?php 
+                        <?php 
                         endforeach;
-                    ?>
+                        ?>
                         <div class="card mb-4 p-3 bg-light mx-auto">
                             <div class="card-body">
                                 <div class = 'data'>
                                     <a id = "code"> </a>
-                                    <a id = "time"></a>
-                                </div>
-                            </div>
-                            <div class="card-footer bg-light">
-                                <a> Instagram (mustofakamal71) </a>
-                            </div>
-                        </div>
-                        <div class="card mb-4 p-3 bg-light mx-auto">
-                            <div class="card-body">
-                                <div class = 'data'>
-                                    <a id = "code"> </a>
-                                    <a id = "time"></a>
-                                </div>
-                            </div>
-                            <div class="card-footer bg-light">
-                                <a> Instagram (mustofakamal71) </a>
-                            </div>
-                        </div>
-                        <div class="card mb-4 p-3 bg-light mx-auto">
-                            <div class="card-body">
-                                <div class = 'data'>
-                                    <a id = "code"> </a>
-                                    <!-- <a id = "time"> </a> -->
-                                </div>
-                            </div>
-                            <div class="card-footer bg-light">
-                                <a> Instagram (mustofakamal71) </a>
-                            </div>
-                        </div>
-                        <div class="card mb-4 p-3 bg-light mx-auto">
-                            <div class="card-body">
-                                <div class = 'data'>
-                                    <a id = "code"> </a>
-                                    <a id = "time"></a>
-                                </div>
-                            </div>
-                            <div class="card-footer bg-light">
-                                <a> Instagram (mustofakamal71) </a>
-                            </div>
-                        </div>
-                        <div class="card mb-4 p-3 bg-light mx-auto">
-                            <div class="card-body">
-                                <div class = 'data'>
-                                    <a id = "code"> </a>
-                                    <a id = "time"></a>
-                                </div>
-                            </div>
-                            <div class="card-footer bg-light">
-                                <a> Instagram (mustofakamal71) </a>
-                            </div>
-                        </div>
-                        <div class="card mb-4 p-3 bg-light mx-auto">
-                            <div class="card-body">
-                                <div class = 'data'>
-                                    <a id = "code"> </a>
-                                    <!-- <a id = "time"> </a> -->
-                                </div>
-                            </div>
-                            <div class="card-footer bg-light">
-                                <a> Instagram (mustofakamal71) </a>
-                            </div>
-                        </div>
-                        <div class="card mb-4 p-3 bg-light mx-auto">
-                            <div class="card-body">
-                                <div class = 'data'>
-                                    <a id = "code"> </a>
-                                    <a id = "time"></a>
-                                </div>
-                            </div>
-                            <div class="card-footer bg-light">
-                                <a> Instagram (mustofakamal71) </a>
-                            </div>
-                        </div>
-                        <div class="card mb-4 p-3 bg-light mx-auto">
-                            <div class="card-body">
-                                <div class = 'data'>
-                                    <a id = "code"> </a>
-                                    <a id = "time"></a>
                                 </div>
                             </div>
                             <div class="card-footer bg-light">
