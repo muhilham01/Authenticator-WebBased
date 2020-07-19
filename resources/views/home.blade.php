@@ -14,7 +14,7 @@
                         </div>
                     @endif
 
-                     <a href="{{ route('home') }}" target="_blank">
+                     <a href="{{ route('service') }}" target="_self">
                          Code
                     </a>
                 </div>
