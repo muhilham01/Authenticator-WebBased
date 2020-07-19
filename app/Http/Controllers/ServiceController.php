@@ -51,7 +51,7 @@
                 'user_id' => 1
             ]);
             
-            return redirect('/home');
+            return redirect('/user/home');
         }
     }
 ?>

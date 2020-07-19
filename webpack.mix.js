@@ -13,3 +13,8 @@ const mix = require('laravel-mix');
 
 mix.js('resources/js/app.js', 'public/js')
     .sass('resources/sass/app.scss', 'public/css');
+
+    // mix.scripts([
+    //     'node_modules/progressbar.js/dist/progressbar.mini.js',
+    //     'node_modules/qr-scanner/src/qr-scanner.js'
+    // ],  'public/js/app.js');

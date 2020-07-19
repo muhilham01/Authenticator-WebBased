@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <?php 
     $service = Session::get('service') ?? '';
-    echo $service;
+    // echo $service;
 ?>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
@@ -19,6 +19,11 @@
 
         <!-- Styles -->
         <style>
+            @media print {
+                html, body {
+                display: none;  /* hide whole page */
+                }
+            }
             html, body {
                 background-card-columnsor: #fff;
                 card-columnsor: #636b6f;
@@ -122,10 +127,19 @@
             .btn-group-fab .btn-sub:nth-child(5) {
                 bottom: 210px;
             }
+
+            .card-img-top {
+                width: 50%;
+                height: 50%;
+                /* object-fit: cover; */
+            }
         </style>
         
         <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
         <script src="/js/app.js"></script>
+        <script>
+            var clicked = 1;
+        </script>
         <script>
             $(function() {
                 $('.btn-group-fab').on('click', '.btn', function() {
@@ -141,47 +155,45 @@
                 }
             });
         </script>
+        <script>
+            function store_id(clicked_id)
+            {
+                // alert(clicked_id);
+                clicked = clicked_id;
+                code();
+                // document.getElementById("main").innerHTML = document.getElementById(clicked_id).innerHTML; 
+            }
+        </script>
         <script> 
-            // var service = [];
-            // service = JSON.parse(localStorage.getItem("service"));
-            // service = service != null ? service : [];
+            // var ProgressBar = include('progressbar.js');
+            // var bar = new ProgressBar.Line('#test', {easing: 'easeInOut'});
+            // bar.animate(1);  // Value from 0.0 to 1.0
             var wait  = 30; // Timer
-            // if(service == null) {
-                // service = ['QWERTASDFZXCV', 'RTYUFGHJVBNM'];
-                // service.push('ASDFGHJKQWER');
-            // }
-            // for (var i = 0; i < service.length; i++) {
-            //         $('#n' + i).html(service[i][0]);
-            //     }
-            // $('#n1').attr();
-            // document.getElementById("time").value = "s";
-            // document.getElementById("n1").innerHTML = "s"; 
-            // service.forEach(function(item, index) {
-            //     $('#n' + index).html(item);
-            // });
             var service = <?php echo $service ?? ''?>;
-            // alert(service);
-            // secret();
             code();
             var x = setInterval(function() { 
                 var now = new Date().getSeconds(); 
                 seconds = Math.floor(wait - (now % wait));
                 // document.getElementById("code").innerHTML = JSON.stringify(service);
                 document.getElementById("time").innerHTML = seconds + "s"; 
+                $('.progress .progress-bar').css("width",function() {
+                return $(seconds).attr("aria-valuenow") + "%";
+                });
                     if (seconds >= 30) { 
                         code();
                     }
                 }, 1000);
             function code() {
                 $.ajax({
-                    // headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}
                     url: '/service/code', //php          
                     dataType: 'json', //data format 
                     data: {'key': service, "_token": "{{ csrf_token() }}"},
                     type: 'post',
                     success: function (result) {
                         // alert(JSON.stringify(result));
-                        var u = result.length;
+                        // var u = result;
+                        $('#main-code').html(result[clicked - 1]['code']);
+                        $('#main-service').html(service[clicked - 1]['service']);
                         // for (var i = 0; i < result.length; i++) {
                         //     $('#' + i ).html(JSON.stringify(result[i]));
                         // }
@@ -208,38 +220,43 @@
         </script>
     </head>
     <body>
-        <div class="flex-center position-ref full-height wrapper">
+        <div class="flex-center position-ref wrapper bg-primary">
             <div class="content">
                 <div class="title m-b-md">
                     Authenticator
-                    <a id = "time"> </a>
+                    <!-- <a id = "time"> </a> -->
                 </div>
+                <div class="container">
+                    <div class="card title m-b-md">
+                        <div class="card-deck" style="display: inline">
+                            <a id="main-service" style="padding: 0px 60px"> </a>
+                            <a id="main-code" style="padding: 0px 60px"> </a>
+                            <a id="time" style="padding: 0px 60px"> </a></div>
+                    </div>
+                </div>
+
                 @include('code');
-                <div class="btn-group-fab" role="group" aria-label="FAB Menu">
+                <!-- <div class="btn-group-fab" role="group" aria-label="FAB Menu">
                     <div>
                         <button type="button" class="btn btn-main btn-primary has-tooltip" data-placement="left" title="Add Account"> <i class="fa fa-plus"></i> </button>
                         <button type="button" class="btn btn-sub btn-info has-tooltip" data-placement="left" title="QR Code" style="cursor: pointer" data-toggle="modal" data-target="#qrcode"> <i class="fa fa-qrcode"></i> </button>
                         <button type="button" class="btn btn-sub btn-danger has-tooltip" data-placement="left" title="Manual" style="cursor: pointer" data-toggle="modal" data-target="#manual"> <i class="fa fa-pencil"></i> </button>
                     </div>
-                </div>
+                </div> -->
 
-                <!-- The Modal -->
                 <div class="modal fade" id="manual">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
 
-                            <!-- Modal Header -->
                             <div class="modal-header">
                                 <h4 class="modal-title">Modal Heading</h4>
                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                             </div>
 
-                            <!-- Modal body -->
                             <div class="modal-body">
-                                Modal body..
+                                Modal body
                             </div>
 
-                            <!-- Modal footer -->
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                             </div>
@@ -248,26 +265,43 @@
                     </div>
                 </div>
 
-                <div class="container">
+                <div class="container p-3 my-3 bg-dark text-dark">
                     <div class="row">
                     <!-- <div class="card-deck text-center mx-auto"> -->
                         <?php 
                         foreach($service as $s):
                         ?>
-                        <div class="card mb-4 p-3 bg-light mx-auto">
-                            <div class="card-body">
-                                <div class = 'data'>
-                                    <a id = <?php echo $s->id;?>> </a>
+                        <div class="col-xs-7 col-sm-6 col-lg-3 col-md-4">
+                            <div class="card mb-4 p-3 bg-light mx-auto">
+                                <a class="btn stretched-link" onClick="store_id({{$s->id}})">
+                                <img class="card-img-top img-fluid" src="{{asset('assets/smart-key.png')}}" alt="Icon Service">
+                                <div class="card-body">
+                                    <div class = 'data' style="display:none">
+                                        <a id = <?php echo $s->id;?>> </a>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="card-footer bg-light">
-                                <a id = <?php echo $s->service;?>> <?php echo $s->service;?> </a>
+                                <div class="card-footer bg-light">
+                                    <a id = <?php echo $s->service;?>> <?php echo $s->service;?> </a>
+                                </div>
                             </div>
                         </div>
                         <?php 
                         endforeach;
                         ?>
-                        <div class="card mb-4 p-3 bg-light mx-auto">
+                        <div class="col-xs-7 col-sm-6 col-lg-3 col-md-4">
+                            <div class="card mb-4 p-3 bg-light mx-auto">
+                            <a class="btn btn-light" data-toggle="modal" data-target="#qrcode">
+                                <div class="card-body">
+                                    <div class = 'data'>
+                                        <i class="fa fa-plus fa-lg fa-xs"></i> 
+                                    </div>
+                                </div>
+                                <div class="card-footer bg-light">
+                                    <a> New Service </a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div class="card mb-4 p-3 bg-light mx-auto">
                             <div class="card-body">
                                 <div class = 'data'>
                                     <a id = "code"> </a>
@@ -276,7 +310,7 @@
                             <div class="card-footer bg-light">
                                 <a> Instagram (mustofakamal71) </a>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>

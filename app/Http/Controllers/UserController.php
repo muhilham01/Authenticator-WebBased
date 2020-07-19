@@ -36,7 +36,7 @@ class UserController extends Controller
     public function home()
     {
     	// mengambil data dari table user
-    	Session::flush();
+    	// Session::flush();
         $service = DB::table('service')->where('user_id',$id = 1)->get();
 
         // mengirim data user ke view index
