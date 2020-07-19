@@ -1,61 +1,92 @@
-<?php
-//session_start();
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-$ga = new PHPGangsta_GoogleAuthenticator();
-$secret = "QWERASDFZXCV";
-echo nl2br("Secret is: ".$secret."\r\n");
+        <title>Laravel</title>
 
-$qrCodeUrl = $ga->getQRCodeGoogleUrl('Blog', $secret);
-echo nl2br("Google Charts URL for the QR-Code: ".$qrCodeUrl."\r\n");
+        <!-- Fonts -->
+        <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
 
-$oneCode = $ga->getCode($secret);
-echo "Checking Code '$oneCode' and Secret '$secret':\r\n";
+        <!-- Styles -->
+        <style>
+            html, body {
+                background-color: #fff;
+                color: #636b6f;
+                font-family: 'Nunito', sans-serif;
+                font-weight: 200;
+                height: 100vh;
+                margin: 0;
+            }
+            .full-height {
+                height: 100vh;
+            }
+            .flex-center {
+                align-items: center;
+                display: flex;
+                justify-content: center;
+            }
+            .position-ref {
+                position: relative;
+            }
+            .top-right {
+                position: absolute;
+                right: 10px;
+                top: 18px;
+            }
+            .content {
+                text-align: center;
+            }
+            .title {
+                font-size: 84px;
+            }
+            .links > a {
+                color: #636b6f;
+                padding: 0 25px;
+                font-size: 13px;
+                font-weight: 600;
+                letter-spacing: .1rem;
+                text-decoration: none;
+                text-transform: uppercase;
+            }
+            .m-b-md {
+                margin-bottom: 30px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="flex-center position-ref full-height">
+            @if (Route::has('login'))
+                <div class="top-right links">
+                    @auth
+                        <a href="{{ url('/home') }}">Home</a>
+                    @else
+                        <a href="{{ route('login') }}">Login</a>
 
-$checkResult = $ga->verifyCode($secret, $oneCode, 2);    // 2 = 2*30sec clock tolerance
-if ($checkResult) {
-    echo 'OK';
-} else {
-    echo 'FAILED';
-}
+                        @if (Route::has('register'))
+                            <a href="{{ route('register') }}">Register</a>
+                        @endif
+                    @endauth
+                </div>
+            @endif
 
-?>
+            <div class="content">
+                <div class="title m-b-md">
+                    Laravel
+                </div>
 
-<!DOCTYPE HTML> 
-<html> 
-<head> 
-<style> 
-p { 
-  text-align: center; 
-  font-size: 60px; 
-} 
-</style> 
-</head> 
-<body> 
-<p id="count"></p> 
-<script> 
-
-var deadline;
- if (localStorage.getItem("time") != 0)
- {
-     deadline = localStorage.getItem("time");
- } else if (localStorage.getItem("time") == null ){
-     deadline = new Date().getTime()+35000; 
- }
-
-var x = setInterval(function() { 
-    var now = new Date().getTime(); 
-    var t = deadline - now;
-    seconds = Math.floor(((t % (1000 * 60)) / 1000) +1); 
-    document.getElementById("count").innerHTML = seconds + "s "; 
-    if (t < 1) { 
-        deadline = new Date().getTime()+34000;  
-    } 
-    localStorage.setItem("time", deadline);
-    }, 1000); 
-</script> 
-  
-</body> 
-</html> 
-
-
-
+                <div class="links">
+                    <a href="https://laravel.com/docs">Docs</a>
+                    <a href="https://laracasts.com">Laracasts</a>
+                    <a href="https://laravel-news.com">News</a>
+                    <a href="https://blog.laravel.com">Blog</a>
+                    <a href="https://nova.laravel.com">Nova</a>
+                    <a href="https://forge.laravel.com">Forge</a>
+                    <a href="https://vapor.laravel.com">Vapor</a>
+                    <a href="https://github.com/laravel/laravel">GitHub</a>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

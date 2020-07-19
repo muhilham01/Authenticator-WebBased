@@ -29,10 +29,13 @@ Route::get('/test', function () {
     return view('test');
 });
 
-Route::get('/home', 'UserController@home');
+Route::get('/user/home', 'UserController@home');
 
 Route::get('/user', 'UserController@index');
 
 Route::get('/user/code', 'UserController@code');
 
 Route::post('/service/code', 'ServiceController@code');
+
+Auth::routes();
+Route::get('/home', 'HomeController@index')->name('home');
