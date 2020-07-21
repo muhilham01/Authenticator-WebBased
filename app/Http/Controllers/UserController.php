@@ -6,6 +6,7 @@ use PHPGangsta_GoogleAuthenticator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -37,7 +38,7 @@ class UserController extends Controller
     {
     	// mengambil data dari table user
     	// Session::flush();
-        $service = DB::table('service')->where('user_id',$id = 1)->get();
+        $service = DB::table('service')->where('user_id', Auth::user()->id)->get();
 
         // mengirim data user ke view index
         Session::put('service', $service);

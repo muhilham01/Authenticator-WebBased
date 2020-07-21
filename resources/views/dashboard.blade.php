@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <?php 
     $service = Session::get('service') ?? '';
-    // echo $service;
+    $user = Auth::user();
+    // print_r(Session::all());
+    // echo Auth::user();
+    // echo Session::get('status');
 ?>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
@@ -84,54 +87,32 @@
                 margin-bottom: 30px;
             }
 
-            .btn-group-fab {
-                position: absolute;
-                width: 50px;
-                height: auto;
-                right: 20px; bottom: 20px;
-            }
-            .btn-group-fab div {
-                position: relative; width: 100%;
-                height: auto;
-            }
-            .btn-group-fab .btn {
-                position: absolute;
-                bottom: 0;
-                border-radius: 50%;
-                display: block;
-                margin-bottom: 4px;
-                width: 40px; height: 40px;
-                margin: 4px auto;
-            }
-            .btn-group-fab .btn-main {
-                width: 50px; height: 50px;
-                right: 50%; margin-right: -25px;
-                z-index: 9;
-            }
-            .btn-group-fab .btn-sub {
-                bottom: 0; z-index: 8;
-                right: 50%;
-                margin-right: -20px;
-                -webkit-transition: all 2s;
-                transition: all 0.5s;
-            }
-            .btn-group-fab.active .btn-sub:nth-child(2) {
-                bottom: 60px;
-            }
-            .btn-group-fab.active .btn-sub:nth-child(3) {
-                bottom: 110px;
-            }
-            .btn-group-fab.active .btn-sub:nth-child(4) {
-                bottom: 160px;
-            }
-            .btn-group-fab .btn-sub:nth-child(5) {
-                bottom: 210px;
+            .card-img-top {
+                width: 75px;
+                /* height: 50%; */
+                /* object-fit: cover; */
             }
 
-            .card-img-top {
-                width: 50%;
-                height: 50%;
-                /* object-fit: cover; */
+            .card > .card-header:hover .btn {
+                display: none;
+                /* opacity: .5 */
+            }
+
+            .card > .card-header:hover {
+                background-color: transparent !important;
+                /* opacity: .6 */
+            }
+
+            .card > .card-header:hover .text {
+                display: block;
+            }
+
+            .card > .card-header:hover .img {
+                width: 100%;
+            }
+
+            .text {
+                display: none;
             }
         </style>
         
@@ -164,21 +145,155 @@
                 // document.getElementById("main").innerHTML = document.getElementById(clicked_id).innerHTML; 
             }
         </script>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-sm bg-dark navbar-dark shadow">
+            <div class="logo" style="float: left">
+                <a class="navbar-brand" href="#">
+                    <div id="logoca"><img src="https://www.cyberarmy.id/public/depan/img/logo_ca.png" width="150px"></div>
+                </a>
+            </div>
+
+            <button class="navbar-toggler m-2" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto"> <!-- style="margin: 0px 5% 0px auto"> -->
+                    <!-- <li class="nav-item active">
+                        <div class="dropdown dropdownA">
+                            <a href="#" class="nav-link dropdown-toggle" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">USER</a>
+                            <ul class="dropdown-menu" style="border-color: #252E71">
+                                
+                                <a class="dropdown-item" href="https://www.cyberarmy.id/layanan/vdp">Profile</a>
+                                
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="https://www.cyberarmy.id/layanan/company">Logout</a>
+                                
+                            </ul>
+                        </div>
+                    </li> -->
+                    
+                    <li class="nav-item dropdown" style="padding: 10px;">
+                        <a class="btn btn-outline-success dropdown-toggle dropdown-toggle-lang nav-link" style="padding: .35rem 1rem; color: white" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span>
+                                {{$user->name}}
+                            </span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+                            <a class="dropdown-item" href="#" onclick="langId()">Profile</a>
+                            <a class="dropdown-item" href="#" onclick="langEn()">Logout</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div class="wrapper bg-dark">
+            <div class="title content m-b-md" style="color: white">
+                Authenticator
+                <!-- <a id = "time"> </a> -->
+            </div>
+            <div class="container">
+                <div class="card title content m-b-md">
+                    <div class="progress bg-white">
+                        <div class="progress-bar bg-success progress-bar-danger progress-bar-striped progress-bar-animated" role="progressbar"
+                        aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+                        </div>
+                    </div>
+                    <div class="card-body" style="display: inline;">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <h1 id="main-service"> No </h1>
+                            </div>
+                            <div class="col-lg-4">
+                                <h1 id="main-code"> Service </h1>
+                            </div>
+                            <div class="col-lg-4">
+                                <h1 id="time"> </h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @include('code');
+            <!-- <div class="btn-group-fab" role="group" aria-label="FAB Menu">
+                <div>
+                    <button type="button" class="btn btn-main btn-primary has-tooltip" data-placement="left" title="Add Account"> <i class="fa fa-plus"></i> </button>
+                    <button type="button" class="btn btn-sub btn-info has-tooltip" data-placement="left" title="QR Code" style="cursor: pointer" data-toggle="modal" data-target="#qrcode"> <i class="fa fa-qrcode"></i> </button>
+                    <button type="button" class="btn btn-sub btn-danger has-tooltip" data-placement="left" title="Manual" style="cursor: pointer" data-toggle="modal" data-target="#manual"> <i class="fa fa-pencil"></i> </button>
+                </div>
+            </div> -->
+
+            <div class="modal fade" id="manual">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <h4 class="modal-title">Modal Heading</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+
+                        <div class="modal-body">
+                            Modal body
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="container bg-light">
+                <div class="row">
+                <!-- <div class="card-deck text-center mx-auto"> -->
+                    <?php 
+                    foreach($service as $s):
+                    ?>
+                    <div class="col-xs-7 col-sm-6 col-lg-2 col-md-4" style="margin-bottom:20px;">
+                        <div class="card d-flex flex-fill mx-auto text-center" style="box-shadow: 0px 0px 15px #48494a;">
+                            <!-- <a class="btn" onClick="store_id({{$s->id}})"> -->
+                            <div class="card-header">
+                                <img class="card-img-top img" src="{{asset('assets/smart-key.png')}}" alt="Icon Service" width="150px">
+                                <!-- <h5 id = "{{$s->service}}"> {{$s->service}} </h5> -->
+                                <button class="btn stretched-link btn-sm"id="{{$s->service}}" style="color:dark;" onMouseOver="store_id({{$s->id}})"> 
+                                    {{$s->service}}  
+                                </button>
+                                <!-- <div class="text" style="color:dark;"> <br> <h6> {{$s->service}} <h6> </div> -->
+                            </div>
+                        </div>
+                    </div>
+                    <?php 
+                    endforeach;
+                    ?>
+                    <div class="col-xs-7 col-sm-6 col-lg-2 col-md-4">
+                        <div class="card d-flex flex-fill mx-auto text-center" style="box-shadow: 0px 0px 15px #48494a;">
+                            <!-- <a class="btn" onClick="store_id({{$s->id}})"> -->
+                            <div class="card-header">
+                                <img class="card-img-top img" src="{{asset('assets/plus.png')}}" alt="Icon Service" width="150px">
+                                <!-- <h5 id = "{{$s->service}}"> {{$s->service}} </h5> -->
+                                <i class="stretched-link fa fa-plus" style="color:dark;" data-toggle="modal" data-target="#qrcode">
+                                    New Service
+                                </i> 
+                                <!-- <div class="text" style="color:dark;"> <br> <h6> {{$s->service}} <h6> </div> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <script> 
-            // var ProgressBar = include('progressbar.js');
-            // var bar = new ProgressBar.Line('#test', {easing: 'easeInOut'});
-            // bar.animate(1);  // Value from 0.0 to 1.0
             var wait  = 30; // Timer
             var service = <?php echo $service ?? ''?>;
             code();
             var x = setInterval(function() { 
                 var now = new Date().getSeconds(); 
-                seconds = Math.floor(wait - (now % wait));
+                var seconds = Math.floor(wait - (now % wait));
                 // document.getElementById("code").innerHTML = JSON.stringify(service);
                 document.getElementById("time").innerHTML = seconds + "s"; 
-                $('.progress .progress-bar').css("width",function() {
-                return $(seconds).attr("aria-valuenow") + "%";
-                });
+                $(".progress-bar").css("width", seconds * 3.333334 + "%");
                     if (seconds >= 30) { 
                         code();
                     }
@@ -200,10 +315,10 @@
                         // for (let key in result) {
                         //     console.log(key, result[key]);
                         // }
-                        result.forEach(function(item, index) {
-                            $('#' + item['id']).html(item['code']);
-                        });
-                        $('#code').html(JSON.stringify(result)); //output to html
+                        // result.forEach(function(item, index) {
+                        //     $('#' + item['id']).html(item['code']);
+                        // });
+                        // $('#code').html(JSON.stringify(result)); //output to html
                         // $('#2').html(JSON.stringify(result[0]['id']));
                         // result.forEach(function(item, index) {
                         //     $('#' + index).html(JSON.stringify(item));
@@ -218,102 +333,5 @@
                 });
             }
         </script>
-    </head>
-    <body>
-        <div class="flex-center position-ref wrapper bg-primary">
-            <div class="content">
-                <div class="title m-b-md">
-                    Authenticator
-                    <!-- <a id = "time"> </a> -->
-                </div>
-                <div class="container">
-                    <div class="card title m-b-md">
-                        <div class="card-deck" style="display: inline">
-                            <a id="main-service" style="padding: 0px 60px"> </a>
-                            <a id="main-code" style="padding: 0px 60px"> </a>
-                            <a id="time" style="padding: 0px 60px"> </a></div>
-                    </div>
-                </div>
-
-                @include('code');
-                <!-- <div class="btn-group-fab" role="group" aria-label="FAB Menu">
-                    <div>
-                        <button type="button" class="btn btn-main btn-primary has-tooltip" data-placement="left" title="Add Account"> <i class="fa fa-plus"></i> </button>
-                        <button type="button" class="btn btn-sub btn-info has-tooltip" data-placement="left" title="QR Code" style="cursor: pointer" data-toggle="modal" data-target="#qrcode"> <i class="fa fa-qrcode"></i> </button>
-                        <button type="button" class="btn btn-sub btn-danger has-tooltip" data-placement="left" title="Manual" style="cursor: pointer" data-toggle="modal" data-target="#manual"> <i class="fa fa-pencil"></i> </button>
-                    </div>
-                </div> -->
-
-                <div class="modal fade" id="manual">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-
-                            <div class="modal-header">
-                                <h4 class="modal-title">Modal Heading</h4>
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            </div>
-
-                            <div class="modal-body">
-                                Modal body
-                            </div>
-
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
-                <div class="container p-3 my-3 bg-dark text-dark">
-                    <div class="row">
-                    <!-- <div class="card-deck text-center mx-auto"> -->
-                        <?php 
-                        foreach($service as $s):
-                        ?>
-                        <div class="col-xs-7 col-sm-6 col-lg-3 col-md-4">
-                            <div class="card mb-4 p-3 bg-light mx-auto">
-                                <a class="btn stretched-link" onClick="store_id({{$s->id}})">
-                                <img class="card-img-top img-fluid" src="{{asset('assets/smart-key.png')}}" alt="Icon Service">
-                                <div class="card-body">
-                                    <div class = 'data' style="display:none">
-                                        <a id = <?php echo $s->id;?>> </a>
-                                    </div>
-                                </div>
-                                <div class="card-footer bg-light">
-                                    <a id = <?php echo $s->service;?>> <?php echo $s->service;?> </a>
-                                </div>
-                            </div>
-                        </div>
-                        <?php 
-                        endforeach;
-                        ?>
-                        <div class="col-xs-7 col-sm-6 col-lg-3 col-md-4">
-                            <div class="card mb-4 p-3 bg-light mx-auto">
-                            <a class="btn btn-light" data-toggle="modal" data-target="#qrcode">
-                                <div class="card-body">
-                                    <div class = 'data'>
-                                        <i class="fa fa-plus fa-lg fa-xs"></i> 
-                                    </div>
-                                </div>
-                                <div class="card-footer bg-light">
-                                    <a> New Service </a>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- <div class="card mb-4 p-3 bg-light mx-auto">
-                            <div class="card-body">
-                                <div class = 'data'>
-                                    <a id = "code"> </a>
-                                </div>
-                            </div>
-                            <div class="card-footer bg-light">
-                                <a> Instagram (mustofakamal71) </a>
-                            </div>
-                        </div> -->
-                    </div>
-                </div>
-            </div>
-        </div>
     </body>
 </html>

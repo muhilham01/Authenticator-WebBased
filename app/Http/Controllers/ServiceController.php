@@ -5,6 +5,7 @@
     use Illuminate\Http\Request;
     use Illuminate\Support\Facades\Session;
     use Illuminate\Support\Facades\DB;
+    use Illuminate\Support\Facades\Auth;
     use PHPGangsta_GoogleAuthenticator;
 
     class ServiceController extends Controller
@@ -23,7 +24,7 @@
 
         public function get_secret() {
             Session::forget('service');
-            $service = DB::table('service')->where('user_id',$id = 1)->get();
+            $service = DB::table('service')->where('user_id', Auth::user()->id)->get();
             // echo $secret;
             // $service = array();
             // foreach($secret as $s) {
@@ -48,7 +49,7 @@
             DB::table('service')->insert([
                 'service' => $request->name,
                 'secret' => $request->secret,
-                'user_id' => 1
+                'user_id' => Auth::user()->id
             ]);
             
             return redirect('/user/home');
