@@ -54,5 +54,34 @@
             
             return redirect('/user/home');
         }
+
+        public function edit_secret($id)
+        {
+            // mengambil data pegawai berdasarkan id yang dipilih
+            $secret = DB::table('service')->where('id', $id)->get();
+            // passing data pegawai yang didapat ke view edit.blade.php
+            return $secret;
+        
+        }
+
+        public function put_secret(Request $request) {
+
+            DB::table('service')->where('id', $request->id)->update([
+                'service' => $request->name,
+                'secret' => $request->secret
+            ]);
+            
+            return redirect('/user/home');
+        }
+
+        public function put_profile(Request $request) {
+
+            DB::table('users')->where('id', Auth::user()->id)->update([
+                'name' => $request->name,
+                'email' => $request->email
+            ]);
+            
+            return redirect('/user/home');
+        }
     }
 ?>

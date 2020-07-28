@@ -141,6 +141,9 @@
             {
                 // alert(clicked_id);
                 clicked = clicked_id;
+                service_id = clicked;
+                $("#editButton").data('id').value = service_id;
+                // $(".modal-body #id").val(service_id);
                 code();
                 // document.getElementById("main").innerHTML = document.getElementById(clicked_id).innerHTML; 
             }
@@ -181,8 +184,8 @@
                             </span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-                            <a class="dropdown-item" href="#" onclick="langId()">Profile</a>
-                            <a class="dropdown-item" href="#" onclick="langEn()">Logout</a>
+                            <a class="dropdown-item" id="profileButton" href="#" data-toggle="modal" data-id="1" data-target="#profile" onclick="">Profile</a>
+                            <a class="dropdown-item" href="http://localhost:8000/home" onclick="langEn()">Logout</a>
                         </div>
                     </li>
                 </ul>
@@ -211,40 +214,116 @@
                             <div class="col-lg-4">
                                 <h1 id="time"> </h1>
                             </div>
+                            <button class="btn btn-success fa fa-copy" id="copyButton" style="position: absolute; right: 70px;"></button>
+                            <button class="btn btn-info fa fa-edit" id="editButton" style="position: absolute; right: 20px;" data-toggle="modal" data-id="1" data-target="#edit"></button>
                         </div>
                     </div>
                 </div>
             </div>
 
+            <!-- Edit Service -->
+            <script>
+                $(document).on("click", "#editButton", function () {
+                    // service_id = $(this).data('id');
+                    $(".modal-body #id").val(clicked);
+                    // $(".modal-body #id").html(clicked);
+                    $.ajax({
+                        url: '../service/edit_secret/' + clicked, //php          
+                        dataType: 'json', //data format 
+                        // data: {'key': service, "_token": "{{ csrf_token() }}"},
+                        type: 'get',
+                        success: function (result) {
+                            // alert(JSON.stringify(result));
+                            $(".modal-body #name").val(result[0]['service']);
+                            $(".modal-body #secret").val(result[0]['secret']);
+                        },
+                        fail: function(){
+                        // $('#code').html("failed"); //output to html
+                        alert("tidak ada");
+                        },
+                        // complete: function (result){alert("??");},
+                    });
+                    // document.getElementById("id").innerHTML = "blah"
+                });
+            </script>
+
+            <!-- Copy  -->
+            <script>
+                document.getElementById("copyButton").addEventListener("click", function() {
+                    copyToClipboardMsg(document.getElementById("main-code"));
+                });
+
+                function copyToClipboardMsg(elem) {
+                    var succeed = copyToClipboard(elem);
+                    // var msg;
+                    // if (!succeed) {
+                    //     msg = "Copy not supported or blocked.  Press Ctrl+c to copy."
+                    // } else {
+                    //     msg = "Text copied to the clipboard."
+                    // }
+                    // if (typeof msgElem === "string") {
+                    //     msgElem = document.getElementById(msgElem);
+                    // }
+                    // msgElem.innerHTML = msg;
+                    // setTimeout(function() {
+                    //     msgElem.innerHTML = "";
+                    // }, 2000);
+                }
+
+                function copyToClipboard(elem) {
+                    // create hidden text element, if it doesn't already exist
+                    var targetId = "_hiddenCopyText_";
+                    var isInput = elem.tagName === "INPUT" || elem.tagName === "TEXTAREA";
+                    var origSelectionStart, origSelectionEnd;
+                    if (isInput) {
+                        // can just use the original source element for the selection and copy
+                        target = elem;
+                        origSelectionStart = elem.selectionStart;
+                        origSelectionEnd = elem.selectionEnd;
+                    } else {
+                        // must use a temporary form element for the selection and copy
+                        target = document.getElementById(targetId);
+                        if (!target) {
+                            var target = document.createElement("textarea");
+                            target.style.position = "absolute";
+                            target.style.left = "-9999px";
+                            target.style.top = "0";
+                            target.id = targetId;
+                            document.body.appendChild(target);
+                        }
+                        target.textContent = elem.textContent;
+                    }
+                    // select the content
+                    var currentFocus = document.activeElement;
+                    target.focus();
+                    target.setSelectionRange(0, target.value.length);
+                    
+                    // copy the selection
+                    var succeed;
+                    try {
+                        succeed = document.execCommand("copy");
+                    } catch(e) {
+                        succeed = false;
+                    }
+                    // restore original focus
+                    if (currentFocus && typeof currentFocus.focus === "function") {
+                        currentFocus.focus();
+                    }
+                    
+                    if (isInput) {
+                        // restore prior selection
+                        elem.setSelectionRange(origSelectionStart, origSelectionEnd);
+                    } else {
+                        // clear temporary content
+                        target.textContent = "";
+                    }
+                    return succeed;
+                }
+            </script>
+            
+            @include('profile');
+            @include('edit');
             @include('code');
-            <!-- <div class="btn-group-fab" role="group" aria-label="FAB Menu">
-                <div>
-                    <button type="button" class="btn btn-main btn-primary has-tooltip" data-placement="left" title="Add Account"> <i class="fa fa-plus"></i> </button>
-                    <button type="button" class="btn btn-sub btn-info has-tooltip" data-placement="left" title="QR Code" style="cursor: pointer" data-toggle="modal" data-target="#qrcode"> <i class="fa fa-qrcode"></i> </button>
-                    <button type="button" class="btn btn-sub btn-danger has-tooltip" data-placement="left" title="Manual" style="cursor: pointer" data-toggle="modal" data-target="#manual"> <i class="fa fa-pencil"></i> </button>
-                </div>
-            </div> -->
-
-            <div class="modal fade" id="manual">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-
-                        <div class="modal-header">
-                            <h4 class="modal-title">Modal Heading</h4>
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        </div>
-
-                        <div class="modal-body">
-                            Modal body
-                        </div>
-
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
 
             <div class="container bg-light">
                 <div class="row">
@@ -258,7 +337,7 @@
                             <div class="card-header">
                                 <img class="card-img-top img" src="{{asset('assets/smart-key.png')}}" alt="Icon Service" width="150px">
                                 <!-- <h5 id = "{{$s->service}}"> {{$s->service}} </h5> -->
-                                <button class="btn stretched-link btn-sm"id="{{$s->service}}" style="color:dark;" onMouseOver="store_id({{$s->id}})"> 
+                                <button class="btn stretched-link btn-sm" id="{{$s->service}}" style="color:dark;" onMouseOver="store_id({{$s->id}})"> 
                                     {{$s->service}}  
                                 </button>
                                 <!-- <div class="text" style="color:dark;"> <br> <h6> {{$s->service}} <h6> </div> -->
@@ -284,6 +363,7 @@
                 </div>
             </div>
         </div>
+
         <script> 
             var wait  = 30; // Timer
             var service = <?php echo $service ?? ''?>;
@@ -307,11 +387,17 @@
                     success: function (result) {
                         // alert(JSON.stringify(result));
                         // var u = result;
-                        $('#main-code').html(result[clicked - 1]['code']);
-                        $('#main-service').html(service[clicked - 1]['service']);
-                        // for (var i = 0; i < result.length; i++) {
-                        //     $('#' + i ).html(JSON.stringify(result[i]));
-                        // }
+                        // $('#main-code').html(result[clicked - 1]['code']);
+                        // $('#main-service').html(service[clicked - 1]['service']);
+                        // alert(clicked);
+                        for (var i = 0; i < result.length; i++) {
+                            // $('#' + i ).html(JSON.stringify(result[i]));
+                            if(result[i]['id'] == clicked) {
+                                $('#main-code').html(result[i]['code']);
+                                $('#main-service').html(service[i]['service']);
+                                break;
+                            }
+                        }
                         // for (let key in result) {
                         //     console.log(key, result[key]);
                         // }

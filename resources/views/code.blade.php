@@ -18,8 +18,7 @@
 
                     <div role="tabpanel">
                         <!-- Nav tabs -->
-                        <ul class="nav nav-tabs" role="tablist" style="cursor: pointer;
-  padding: 14px 16px; transition: 0.3s; background-color: #df86; ">
+                        <ul class="nav nav-tabs" role="tablist" style="cursor: pointer; padding: 14px 16px; transition: 0.3s; background-color: #df86; ">
                             <li role="presentation" class="active" style="padding: 1px 8px;">
                                 <a href="#qr_code" aria-controls="qr_code" role="tab" data-toggle="tab">QR Code</a>
                             </li>

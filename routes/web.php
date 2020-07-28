@@ -23,6 +23,12 @@ Route::get('/service', function () {
 
 Route::post('/service/post_secret', 'ServiceController@post_secret');
 
+Route::post('/service/put_secret', 'ServiceController@put_secret');
+
+Route::post('/service/put_profile', 'ServiceController@put_profile');
+
+Route::get('/service/edit_secret/{id}', 'ServiceController@edit_secret');
+
 Route::post('/service/get_secret', 'ServiceController@get_secret');
 
 Route::get('/test', function () {
