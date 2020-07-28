@@ -31,7 +31,12 @@
                     </div>
 
                     <div class="form-group row mb-0">
-                        <div class="col-md-8 offset-md-5">
+                        <div class="col-9 mb-2">
+                            <button name="btnDelete" type="submit" class="btn btn-danger">
+                                Delete
+                            </button>
+                        </div>
+                        <div class="col-3 mb-2">
                             <button type="submit" class="btn btn-primary">
                                 Submit
                             </button>

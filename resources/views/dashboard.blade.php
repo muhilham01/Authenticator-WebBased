@@ -184,7 +184,7 @@
                             </span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-                            <a class="dropdown-item" id="profileButton" href="#" data-toggle="modal" data-id="1" data-target="#profile" onclick="">Profile</a>
+                            <a class="dropdown-item" id="profileButton" href="#" data-toggle="modal" data-id="1" data-target="#profile"> Profile</a>
                             <a class="dropdown-item" href="{{ url('/logout') }}"> Logout</a>
                         </div>
                     </li>
