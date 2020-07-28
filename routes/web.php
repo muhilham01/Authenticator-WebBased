@@ -39,10 +39,6 @@ Route::get('/service/edit_secret/{id}', 'ServiceController@edit_secret');
 
 Route::post('/service/get_secret', 'ServiceController@get_secret');
 
-Route::get('/test', function () {
-    return view('templates/header');
-});
-
 Route::get('/user/home', 'UserController@home')->name('service');
 
 Route::get('/user', 'UserController@index');
@@ -51,7 +47,6 @@ Route::get('/user/code', 'UserController@code');
 
 Route::post('/service/code', 'ServiceController@code');
 
-<<<<<<< HEAD
 Route::get('/mail-config',  function () {
     return config('mail');
 });
@@ -73,11 +68,7 @@ Route::prefix('admin')
     
 Auth::routes(['verify' => true]);
 
-=======
-Auth::routes();
-Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/logout', 'UserController@logout');
 
 Route::get('/test', 'ServiceController@qr_code');
->>>>>>> 4486295ee7b67009391d26b38bc516d886e212fc

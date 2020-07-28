@@ -184,21 +184,8 @@
                             </span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-<<<<<<< HEAD
-                            <a class="dropdown-item" href="#" onclick="langId()">Profile</a>
-                           <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                        @csrf
-                                    </form>
-=======
                             <a class="dropdown-item" id="profileButton" href="#" data-toggle="modal" data-id="1" data-target="#profile"> Profile</a>
                             <a class="dropdown-item" href="{{ url('/logout') }}"> Logout</a>
->>>>>>> 4486295ee7b67009391d26b38bc516d886e212fc
                         </div>
                     </li>
                 </ul>
