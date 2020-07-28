@@ -7,6 +7,7 @@
     use Illuminate\Support\Facades\DB;
     use Illuminate\Support\Facades\Auth;
     use PHPGangsta_GoogleAuthenticator;
+    use Zxing\QrReader;
 
     class ServiceController extends Controller
     {
@@ -82,6 +83,25 @@
             ]);
             
             return redirect('/user/home');
+        }
+
+        public function qr_code() {
+            // echo json_encode($_REQUEST['key']);
+            $qrcode = new QrReader('assets/qr.png');
+            $text = $qrcode->text(); //return decoded text from QR Code
+            // echo json_encode($_REQUEST['key']);
+            // echo ($text);
+            $str = "otpauth://totp/Twitter:@Mustofaalhaddad?secret=JMF3WBHEZ3F6RHS7&issuer=Twitter";
+            preg_match('/otpauth:\/\/totp\/(.*?)\?secret=(.*?)\&issuer=(.*)/', $str, $m);
+            // preg_match('/otpauth:\/\/totp\/(.*?)\?/', $str, $m);
+            // print_r($m);
+            $name = $m[1].PHP_EOL;
+            $secret = $m[2].PHP_EOL;
+            $issuer = $m[3].PHP_EOL;
+            // echo $name;
+            // echo $secret;
+            // echo $issuer;
+            return json_encode(array('name' => $name, 'secret' => $secret));
         }
     }
 ?>

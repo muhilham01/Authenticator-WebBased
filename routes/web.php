@@ -45,3 +45,7 @@ Route::post('/service/code', 'ServiceController@code');
 
 Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('/logout', 'UserController@logout');
+
+Route::get('/test', 'ServiceController@qr_code');

@@ -12,7 +12,7 @@
 
             <!-- Modal body -->
             <div class="modal-body">
-                <form method="POST" action="{{ url('service/post_secret/') }}">
+                <form method="POST" action="{{ url('service/post_secret/') }}" enctype="multipart/form-data">
                 <!-- <from onsubmit = "save_data()"> -->
                     @csrf
 
@@ -28,7 +28,9 @@
                         </ul>
                         <!-- Tab panes -->
                         <div class="tab-content">
-                            <div role="tabpanel" class="tab-pane active" id="qr_code" style="padding: 14px 16px;">QR Code</div>
+                            <div role="tabpanel" class="tab-pane active" id="qr_code" style="padding: 14px 16px;">QR Code
+                                <input type="file" name="fileToUpload" id="fileToUpload">
+                            </div>
                             <div role="tabpanel" class="tab-pane" id="manual_input" style="padding: 14px 16px;">
                                 <div class="form-group row">
                                     <label for="secret" class="col-md-4 col-form-label text-md-right"> Secret Code</label>
