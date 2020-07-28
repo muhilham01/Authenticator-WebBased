@@ -1,6 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Mail\MailtrapExample;
+use Illuminate\Support\Facades\Mail;
+//use illuminate\Support\Facades\Auth;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -16,6 +20,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/service', function () {
     return view('service');
@@ -37,5 +43,24 @@ Route::get('/user/code', 'UserController@code');
 
 Route::post('/service/code', 'ServiceController@code');
 
-Auth::routes();
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/mail-config',  function () {
+    return config('mail');
+});
+
+Route::get('/send-mail', function () {
+
+    Mail::to('newuser@example.com')->send(new MailtrapExample());
+
+    return 'A message has been sent to Mailtrap!';
+});
+
+Route::prefix('admin')
+    ->namespace('Admin')
+    ->middleware(['auth','admin'])
+    ->group(function(){
+        Route::get('/', 'DashboardController@index')
+        ->name('admin');
+    });
+    
+Auth::routes(['verify' => true]);
+
