@@ -7,6 +7,7 @@
     use Illuminate\Support\Facades\DB;
     use Illuminate\Support\Facades\Auth;
     use PHPGangsta_GoogleAuthenticator;
+    use Zxing\QrReader;
 
     class ServiceController extends Controller
     {
@@ -46,13 +47,125 @@
             // array_push($secret, array($request->secret, $request->name));
             // Session::put('service',$secret);
             // return view('post');
-            DB::table('service')->insert([
-                'service' => $request->name,
-                'secret' => $request->secret,
-                'user_id' => Auth::user()->id
+            $name = $request->name;
+            $secret = $request->secret;
+            echo $request->qr;
+            $target_dir = "assets/";
+            $target_file = $target_dir . basename($_FILES["qr"]["name"]);
+            $uploadOk = 1;
+            $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+
+            // Check if image file is a actual image or fake image
+            if(isset($_POST["submit"])) {
+                $check = getimagesize($_FILES["qr"]["tmp_name"]);
+                if($check !== false) {
+                    echo "File is an image - " . $check["mime"] . ".";
+                    $uploadOk = 1;
+                } else {
+                    echo "File is not an image.";
+                    $uploadOk = 0;
+                }
+            }
+
+            // Check if file already exists
+            if (file_exists($target_file)) {
+                echo "Sorry, file already exists.";
+                // unset($check);
+                // unlink($target_file);
+                $uploadOk = 1;
+            }
+
+            // Check if $uploadOk is set to 0 by an error
+            if ($uploadOk == 0) {
+                echo "Sorry, your file was not uploaded.";
+            // if everything is ok, try to upload file
+            } else {
+                if (move_uploaded_file($_FILES["qr"]["tmp_name"], $target_file)) {
+                echo "The file ". basename( $_FILES["qr"]["name"]). " has been uploaded.";
+                } else {
+                echo "Sorry, there was an error uploading your file.";
+                }
+            }
+            if(empty($secret)) {
+                $qrcode = new QrReader($target_file);
+                $text = $qrcode->text(); //return decoded text from QR Code
+                preg_match('/otpauth:\/\/totp\/(.*?)\?secret=(.*?)\&issuer=(.*)/', $text, $m);
+                if(count($m) != 0) {
+                    $name = $m[1].PHP_EOL;
+                    $secret = $m[2].PHP_EOL;    
+                }
+            }
+            if(!($name == null || $secret == null)) {
+                DB::table('service')->insert([
+                    'service' => $name,
+                    'secret' => $secret,
+                    'user_id' => Auth::user()->id
+                ]);
+            }
+            // if (file_exists('assets/qr.png')) {
+            //     unlink('assets/qr.png');
+            // }
+            return redirect('/user/home');
+        }
+
+        public function edit_secret($id)
+        {
+            // mengambil data pegawai berdasarkan id yang dipilih
+            $secret = DB::table('service')->where('id', $id)->get();
+            // passing data pegawai yang didapat ke view edit.blade.php
+            return $secret;
+        
+        }
+
+        public function put_secret(Request $request) {
+
+            if(isset($_POST['btnDelete'])) {
+                DB::table('service')->where('id', $request->id)->delete();
+            }
+            else {
+                DB::table('service')->where('id', $request->id)->update([
+                    'service' => $request->name,
+                    'secret' => $request->secret
+                ]);
+            }            
+            return redirect('/user/home');
+        }
+
+        public function delete_secret(Request $request) {
+
+            DB::table('service')->where('id', $request->id)->delete();
+            
+            return redirect('/user/home');
+        }
+
+        public function put_profile(Request $request) {
+
+            DB::table('users')->where('id', Auth::user()->id)->update([
+                'name' => $request->name,
+                'email' => $request->email
             ]);
             
             return redirect('/user/home');
+        }
+
+        public function qr_code() {
+            // echo json_encode($_REQUEST['key']);
+            // $qrcode = new QrReader('assets/qr.png');
+            $qrcode = new QrReader($_REQUEST['qr']);
+            $text = $qrcode->text(); //return decoded text from QR Code
+            // echo json_encode($_REQUEST['key']);
+            // echo ($text);
+            $str = "otpauth://totp/Twitter:@Mustofaalhaddad?secret=JMF3WBHEZ3F6RHS7&issuer=Twitter";
+            preg_match('/otpauth:\/\/totp\/(.*?)\?secret=(.*?)\&issuer=(.*)/', $str, $m);
+            // preg_match('/otpauth:\/\/totp\/(.*?)\?/', $str, $m);
+            // print_r($m);
+            $name = $m[1].PHP_EOL;
+            $secret = $m[2].PHP_EOL;
+            $issuer = $m[3].PHP_EOL;
+            // echo $name;
+            // echo $secret;
+            // echo $issuer;
+            return json_encode(array('name' => $name, 'secret' => $secret));
         }
     }
 ?>
