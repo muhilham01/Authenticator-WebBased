@@ -399,7 +399,7 @@
                             // $('#' + i ).html(JSON.stringify(result[i]));
                             if(result[i]['id'] == clicked) {
                                 $('#main-code').html(result[i]['code']);
-                                $('#main-service').html(service[i]['id']);
+                                $('#main-service').html(service[i]['service']);
                                 break;
                             }
                         }
