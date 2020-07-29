@@ -390,7 +390,7 @@
                     data: {'key': service, "_token": "{{ csrf_token() }}"},
                     type: 'post',
                     success: function (result) {
-                        alert(JSON.stringify(result));
+                        // alert(JSON.stringify(result));
                         // var u = result;
                         // $('#main-code').html(result[clicked - 1]['code']);
                         // $('#main-service').html(service[clicked - 1]['service']);
