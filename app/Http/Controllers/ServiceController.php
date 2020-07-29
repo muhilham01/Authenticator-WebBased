@@ -49,54 +49,68 @@
             // return view('post');
             $name = $request->name;
             $secret = $request->secret;
-            echo $request->qr;
-            $target_dir = "assets/";
-            $target_file = $target_dir . basename($_FILES["qr"]["name"]);
-            $uploadOk = 1;
-            $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
-
-            // Check if image file is a actual image or fake image
-            if(isset($_POST["submit"])) {
-                $check = getimagesize($_FILES["qr"]["tmp_name"]);
-                if($check !== false) {
-                    echo "File is an image - " . $check["mime"] . ".";
-                    $uploadOk = 1;
-                } else {
-                    echo "File is not an image.";
-                    $uploadOk = 0;
-                }
-            }
-
-            // Check if file already exists
-            if (file_exists($target_file)) {
-                echo "Sorry, file already exists.";
-                // unset($check);
-                // unlink($target_file);
+            if(!(is_string($request->qr_text)) && isset($_POST["submitBtn"])){
+                $target_dir = "assets/";
+                $target_file = $target_dir . basename($_FILES["qr"]["name"]);
                 $uploadOk = 1;
-            }
-
-            // Check if $uploadOk is set to 0 by an error
-            if ($uploadOk == 0) {
-                echo "Sorry, your file was not uploaded.";
-            // if everything is ok, try to upload file
-            } else {
-                if (move_uploaded_file($_FILES["qr"]["tmp_name"], $target_file)) {
-                echo "The file ". basename( $_FILES["qr"]["name"]). " has been uploaded.";
+                $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+    
+                // Check if image file is a actual image or fake image
+                if(isset($_POST["submitBtn"])) {
+                    $check = getimagesize($_FILES["qr"]["tmp_name"]);
+                    if($check !== false) {
+                        echo "File is an image - " . $check["mime"] . ".";
+                        $uploadOk = 1;
+                    } else {
+                        echo "File is not an image.";
+                        $uploadOk = 0;
+                    }
+                }
+    
+                // Check if file already exists
+                if (file_exists($target_file)) {
+                    echo "Sorry, file already exists.";
+                    // unset($check);
+                    // unlink($target_file);
+                    $uploadOk = 1;
+                }
+    
+                // Check if $uploadOk is set to 0 by an error
+                if ($uploadOk == 0) {
+                    echo "Sorry, your file was not uploaded.";
+                // if everything is ok, try to upload file
                 } else {
-                echo "Sorry, there was an error uploading your file.";
+                    if (move_uploaded_file($_FILES["qr"]["tmp_name"], $target_file)) {
+                    echo "The file ". basename( $_FILES["qr"]["name"]). " has been uploaded.";
+                    } else {
+                    echo "Sorry, there was an error uploading your file.";
+                    }
+                }
+                if(empty($secret)) {
+                    $qrcode = new QrReader($target_file);
+                    $text = $qrcode->text(); //return decoded text from QR Code
+                    preg_match('/otpauth:\/\/totp\/(.*?)\?secret=(.*?)\&issuer=(.*)/', $text, $m);
+                    if(count($m) != 0) {
+                        $name = $m[1].PHP_EOL;
+                        $secret = $m[2].PHP_EOL;    
+                    }
                 }
             }
-            if(empty($secret)) {
-                $qrcode = new QrReader($target_file);
-                $text = $qrcode->text(); //return decoded text from QR Code
-                preg_match('/otpauth:\/\/totp\/(.*?)\?secret=(.*?)\&issuer=(.*)/', $text, $m);
+            else {
+                preg_match('/otpauth:\/\/totp\/(.*?)\?secret=(.*?)\&issuer=(.*)/', $request->qr_text, $m);
                 if(count($m) != 0) {
-                    $name = $m[1].PHP_EOL;
-                    $secret = $m[2].PHP_EOL;    
+                    $name = $m[1];
+                    $secret = $m[2];
                 }
             }
+            // echo $request->qr;
+            
+            
             if(!($name == null || $secret == null)) {
-                DB::table('service')->insert([
+                DB::table('service')->updateOrInsert([
+                        'service' => $name,
+                    ],
+                    [
                     'service' => $name,
                     'secret' => $secret,
                     'user_id' => Auth::user()->id

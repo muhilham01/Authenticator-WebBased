@@ -25,7 +25,7 @@
                     <!-- Tab panes -->
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane active" id="qr_code" style="padding: 14px 16px;">QR Code
-                            <form action="{{ url('service/post_secret/') }}" method="post" enctype="multipart/form-data">
+                            <form id='qr_form' action="{{ url('service/post_secret/') }}" method="post" enctype="multipart/form-data">
                                 @csrf
                                 <!-- <div>
                                     <video autoplay="false" id="video-webcam">
@@ -62,10 +62,51 @@
                                         alert("Izinkan menggunakan webcam untuk demo!")
                                     }
                                 </script> -->
-
+                                <video id="preview"></video>
                                 <input type="file" name="qr" id="qr">
-                                <input type="submit" onclick="" value="Upload Image" name="submit">
+                                <input type="hidden" name="qr_text" id="qr_text">
+                                <input type="submit" value="Upload Image" name="submitBtn">
                             </form>
+                            <script type="text/javascript">
+                                var scanner = new Instascan.Scanner({ video: document.getElementById('preview'), scanPeriod: 5, mirror: false });
+                                    scanner.addListener('scan',function(content){
+                                        // alert(content);
+                                        $('#qr_text').val(content);
+                                        document.getElementById("qr_form").submit();
+                                        //window.location.href=content;
+                                    });
+                                $('#qrcode').on('shown.bs.modal', function() {
+                                    Instascan.Camera.getCameras().then(function (cameras){
+                                        if(cameras.length>0){
+                                            scanner.start(cameras[0]);
+                                            $('[name="options"]').on('change',function(){
+                                                if($(this).val()==1){
+                                                    if(cameras[0]!=""){
+                                                        scanner.start(cameras[0]);
+                                                    }else{
+                                                        alert('No Front camera found!');
+                                                    }
+                                                }else if($(this).val()==2){
+                                                    if(cameras[1]!=""){
+                                                        scanner.start(cameras[1]);
+                                                    }else{
+                                                        alert('No Back camera found!');
+                                                    }
+                                                }
+                                            });
+                                        }else{
+                                            console.error('No cameras found.');
+                                            alert('No cameras found.');
+                                        }
+                                    }).catch(function(e){
+                                        console.error(e);
+                                        alert(e);
+                                    });
+                                });
+                                $('#qrcode').on('hide.bs.modal', function() {
+                                    scanner.stop();
+                                });
+                            </script>
                         </div>
                         <div role="tabpanel" class="tab-pane" id="manual_input" style="padding: 14px 16px;">
                             <form method="POST" action="{{ url('service/post_secret/') }}">

@@ -114,10 +114,17 @@
             .text {
                 display: none;
             }
+
+            #preview{
+                width:100%;
+                height: 100%;
+                margin:0px auto;
+            }
         </style>
         
         <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
         <script src="/js/app.js"></script>
+        <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
         <script>
             var clicked = 1;
         </script>
@@ -336,11 +343,9 @@
                             <!-- <a class="btn" onClick="store_id({{$s->id}})"> -->
                             <div class="card-header">
                                 <img class="card-img-top img" src="{{asset('assets/smart-key.png')}}" alt="Icon Service" width="150px">
-                                <!-- <h5 id = "{{$s->service}}"> {{$s->service}} </h5> -->
-                                <button class="btn stretched-link btn-sm" id="{{$s->service}}" style="color:dark;" onMouseOver="store_id({{$s->id}})"> 
+                                <button class="btn stretched-link btn-sm" id="{{$s->id}}" style="color:dark;" onMouseOver="store_id({{$s->id}})"> 
                                     {{$s->service}}  
                                 </button>
-                                <!-- <div class="text" style="color:dark;"> <br> <h6> {{$s->service}} <h6> </div> -->
                             </div>
                         </div>
                     </div>
@@ -385,7 +390,7 @@
                     data: {'key': service, "_token": "{{ csrf_token() }}"},
                     type: 'post',
                     success: function (result) {
-                        // alert(JSON.stringify(result));
+                        alert(JSON.stringify(result));
                         // var u = result;
                         // $('#main-code').html(result[clicked - 1]['code']);
                         // $('#main-service').html(service[clicked - 1]['service']);
@@ -394,7 +399,7 @@
                             // $('#' + i ).html(JSON.stringify(result[i]));
                             if(result[i]['id'] == clicked) {
                                 $('#main-code').html(result[i]['code']);
-                                $('#main-service').html(service[i]['service']);
+                                $('#main-service').html(service[i]['id']);
                                 break;
                             }
                         }
