@@ -107,7 +107,7 @@
             
             
             if(!($name == null || $secret == null)) {
-                DB::table('service')->updateOrInsert([
+                DB::table('service')->Insert([
                         'service' => $name,
                     ],
                     [

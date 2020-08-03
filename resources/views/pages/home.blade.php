@@ -14,7 +14,7 @@
                         </div>
                     @endif
 
-                     <a href="{{ route('service') }}" target="_blank"">
+                     <a href="{{ route('service') }}" target="_self">
                          Code <br>
                     </a>
                     <?php if(Auth::user()->roles == 'ADMIN') : ?>

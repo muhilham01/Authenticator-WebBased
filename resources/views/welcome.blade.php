@@ -75,6 +75,13 @@
                 <div class="title m-b-md">
                     Laravel
                 </div>
+                <iframe src="http://localhost:8000/home" width="50%" height="300">
+                    <p>Your browser does not support iframes.</p>
+                </iframe>
+
+                <iframe src="http://localhost:8000/home" width="100%" height="300">
+                    <p>Your browser does not support iframes.</p>
+                </iframe>
 
                 <div class="links">
                     <a href="https://laravel.com/docs">Docs</a>
@@ -88,5 +95,9 @@
                 </div>
             </div>
         </div>
+        <!-- <embed src="https://www.google.com/search?igu=1" style="width:500px; height: 300px;">
+        <iframe src="http://www.google.com" width="100%" height="300">
+            <p>Your browser does not support iframes.</p>
+        </iframe> -->
     </body>
 </html>
